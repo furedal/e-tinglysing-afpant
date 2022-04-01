@@ -22,8 +22,8 @@ må også støtte mottak av [KjoepekontraktFraMegler](#meldingstype-kjoepekontra
 |------|------|----|
 | [KjoepekontraktforespoerselFraBank](#meldingstype-kjoepekontraktforespoerselfrabank) | Bank forespør kjøpekontrakt fra megler | XSD: KjoepekontraktforespoerselFraBank | 
 | [KjoepekontraktSvarFraMegler](#meldingstype-kjoepekontraktsvarframegler)  | Meglers svar på Kjøpekontraktforespørsel fra bank | XSD: KjoepekontraktSvarFraMegler |
-| [kjoepekontraktEndringFraMegler](#kjoepekontraktendringframegler-ved-endring) | Megler sender endringer og tillegg i kjøpekontrakten uoppfordret, til bank som allerede har forespurt kjøpekontrakten. Denne meldingen skal ikke besvares. | XSD: KjoepekontraktFraMegler |
-|[kjoepekontraktUoppfordretFraMegler](#kjoepekontraktuoppfordretframegler-sendes-uoppfordret)|Megler sender kjøpekontrakt uoppfordret til bank som ikke har forespurt kjøpekontrakt. Denne meldingen skal ikke besvares.|XSD: KjoepekontraktFraMegler|
+| [KjoepekontraktEndringFraMegler](#kjoepekontraktendringframegler-ved-endring) | Megler sender endringer og tillegg i kjøpekontrakten uoppfordret, til bank som allerede har forespurt kjøpekontrakten. Denne meldingen skal ikke besvares. | XSD: KjoepekontraktFraMegler |
+|[KjoepekontraktUoppfordretFraMegler](#kjoepekontraktuoppfordretframegler-sendes-uoppfordret) | Megler sender kjøpekontrakt uoppfordret til bank som ikke har forespurt kjøpekontrakt. Denne meldingen skal ikke besvares. | XSD: KjoepekontraktFraMegler|
 
 # Meldingstype: KjoepekontraktforespoerselFraBank
 Bank forespør kjøpekontrakt fra megler
@@ -105,28 +105,50 @@ Merk at signert kjøpekontrakt skal finnes som en egen fil i ZIP-arkivet dersom 
 ### Negativt resultat (NACK)
 - Tom payload returneres (ZIP arkiv med dummy innhold). Manifest key "status" og "statusDescription" må avleses for årsak.
 
-# Meldingstype: KjoepekontraktFraMegler
-Megler sender uoppfordret til bank eller ved ved signifikante endringer.
-
-For hhv. uoppfordret kjøpekontrakt fra megler og endringer i kjøpekontrakt der megler tidligere har besvart bank på forespørsel, skiller vi på 2 meldingstyper med forskjellig navn men samme type/struktur:
-
-### kjoepekontraktUoppfordretFraMegler (sendes uoppfordret)  
+# Meldingstype: KjoepekontraktUoppfordretFraMegler (sendes uoppfordret)
 *Sendes uoppfordret, uten at bank har forespurt kjøpekontrakt.*
 
-  Denne meldingen kan kun sendes uoppfordret fra megler til bank dersom kjøpekontrakten er signert. 
+Denne meldingen kan kun sendes uoppfordret fra megler til bank dersom kjøpekontrakten er signert. 
 Den signert kjøpekontrakten skal da finnes i ZIP-arkivet som _signert_kjoepekontrakt*.(pdf|sdo)_ 
-OG metdata skal inneholde en ressurs/vedlegg med korrekt navn.
+OG metdata skal inneholde en ressurs/vedlegg med navn likt filnavnet på den signerte kjøpekontrakten.
 
-### kjoepekontraktEndringFraMegler (ved endring) 
+_Denne meldingen skal ikke besvares._ 
+
+## Validering og ruting(banksystem)
+Mottakende systemleverandør søker blant lånesaker hvor saksnummer matcher `kjoepekontrakt.bank.referanse` dersom den er angitt.
+
+For en uoppfordret melding med signert kjøpekontrakt, trenger ikke `kjoepekontrakt.bank.referanse` være utfylt.
+I disse tilfellene må bank:
+* søke blant lånsesaker avgrenset til:
+  * eiendommer/borettsandeler angitt i kjøpekontrakten
+  * OG minst 1 kjøper angitt i kjøpekontrakten
+
+## Payload
+At ZIP-arkiv som inneholder en xml-fil med **kjoepekontraktUoppfordretFraMegler** som root-element og som er i henhold til [definert skjema](../afpant-model/xsd/dsve-1.0.0.xsd).
+Dersom kjøpekontrakten er signert skal ZIP-arkiv også innholde den signert kjøpekontrakten (egen fil).
+Den signert kjøpekontrakten er enten en PDF eller en SDO.
+
+**Krav til filnavn i ZIP-arkiv:**
+* Filnavnet til meldingen KjoepekontraktUoppfordretFraMegler må følge konvensjonen: _kjoepekontraktuoppfordretframegler*.xml_ . (navnet til meldingen i lowercase)
+* Filnavnet til en evt. signert kjøpekontrakt skal følge konvensjonen: _signert_kjoepekontrakt*.(pdf|sdo)_.
+
+## Manifest
+(BrokerServiceInitiation.Manifest.PropertyList)
+
+|Manifest key|Type|Required|Beskrivelse|
+|--- |--- |--- |--- |
+|messageType|String|Yes|KjoepekontraktUoppfordretFraMegler|
+
+# Meldingstype: KjoepekontraktEndringFraMegler (ved endring) 
 *Bank har tidligere forespurt kjøpekontrakt eller mottatt signert kjøpekontrakt uoppfordret.* 
 
-  Sendes ved endring, dvs. at megler har tidligere sendt uoppfordret eller har mottatt en forespørsel.
-Felter som krever at det sendes en `KjoepekontraktFraMegler` melding til bank er markert med _hake_ i tabellen i [løsningsbeskrivelsen](kjoepekontrakt-loesningsbeskrivelse.md#svar-fra-megler).
+Sendes ved endring, dvs. at megler har tidligere sendt uoppfordret eller har mottatt en forespørsel.
+Felter som krever at det sendes en `KjoepekontraktEndringFraMegler`-melding til bank er markert med _hake_ i tabellen i [løsningsbeskrivelsen](kjoepekontrakt-loesningsbeskrivelse.md#svar-fra-megler).
 
-Meglers systemleverandør er ansvarlig for å sende oppdateringer til bank med KjoepekontraktFraMegler melding. Hvor ofte meglersystemene må polle for endringer og sende oppdatering til bank er definert i [løsningsbeskrivelsen](kjoepekontrakt-loesningsbeskrivelse.md#oversendt-informasjon-er-endret).
+Meglers systemleverandør er ansvarlig for å sende oppdateringer til bank med KjoepekontraktEndringFraMegler-melding. Hvor ofte meglersystemene må polle for endringer og sende oppdatering til bank er definert i [løsningsbeskrivelsen](kjoepekontrakt-loesningsbeskrivelse.md#oversendt-informasjon-er-endret).
 
 Dersom kjøpekontrakten er signert skal vedlegget med korrekt filnavn være definert som en ressurs/vedlegg i meldingens metadata OG eksistere i ZIP-arkivet.
-For endringer i signert kjøpekontrakt er det et krav at KjoepekontraktFraMegler-meldingen sendes med et nytt unikt vedleggsnavn ift hva som er sendt tidligere for den aktuelle kjøpekontrakten - nytt filnavn skal inneholde tidsstempel. 
+For endringer i signert kjøpekontrakt er det et krav at KjoepekontraktEndringFraMegler-meldingen sendes med et nytt unikt vedleggsnavn ift hva som er sendt tidligere for den aktuelle kjøpekontrakten - nytt filnavn skal inneholde tidsstempel. 
 
 Meglers systemleverandør slutter å sende oppdateringer via kjoepekontraktEndringFraMegler for saker når de er slettet/arkivert eller eldre enn 1 år. Grensen på 1 år vil potensielt justeres hvis vi ser behov for dette etter å ha tatt i bruk systemet i produksjon.
 
@@ -134,33 +156,26 @@ Meglers systemleverandør slutter å sende oppdateringer via kjoepekontraktEndri
 _Denne meldingen skal ikke besvares._ 
 
 ## Validering og ruting(banksystem)
-Mottakende systemleverandør søker blant lånesaker hvor saksnummer matcher `kjoepekontrakt.bank.referanse` dersom den er angitt.
-
-Dersom dette er en uoppfordret melding med signert kjøpekontrakt, trenger ikke `kjoepekontrakt.bank.referanse` være utfylt.
-I disse tilfellene må bank:
-* søke blant lånsesaker avgrenset til:
-  * eiendommer/borettsandeler angitt i kjøpekontrakten
-  * OG minst 1 kjøper angitt i kjøpekontrakten
+Mottakende systemleverandør søker blant lånesaker hvor saksnummer matcher `kjoepekontrakt.bank.referanse`.
   
 ## Validering og ruting(meglersystem)
-Megler må sette `kjoepekontrakt.bank.referanse` dersom megler tidligere har mottatt [KjoepekontraktforespoerselFraBank](#meldingstype-kjoepekontraktforespoerselfrabank) 
+Megler må sette `kjoepekontrakt.bank.referanse` hentet fra forespørselen.
 
 ## Payload
-At ZIP-arkiv som inneholder en xml-fil med **KjoepekontraktFraMegler** som root element og som er i henhold til [definert skjema](../afpant-model/xsd/dsve-1.0.0.xsd).
-Dersom kjøpekontrakten er signert skal ZIP-arkiv også innholde den signert kjøpekontrakten være med som en egen fil.
+At ZIP-arkiv som inneholder en xml-fil med **kjoepekontraktEndringFraMegler** som root-element og som er i henhold til [definert skjema](../afpant-model/xsd/dsve-1.0.0.xsd).
+Dersom kjøpekontrakten er signert skal ZIP-arkiv også innholde den signert kjøpekontrakten (egen fil).
 Den signert kjøpekontrakten er enten en PDF eller en SDO.
 
 **Krav til filnavn i ZIP-arkiv:**
-* Filnavnet til meldingen kjoepekontraktFraMegler må følge konvensjonen: _kjoepekontraktframegler*.xml_ . (navnet til meldingen i lowercase)
+* Filnavnet til meldingen KjoepekontraktEndringFraMegler må følge konvensjonen: _kjoepekontraktendringframegler*.xml_ . (navnet til meldingen i lowercase)
 * Filnavnet til en evt. signert kjøpekontrakt skal følge konvensjonen: _signert_kjoepekontrakt*.(pdf|sdo)_.
-* Dersom filformat er sdo må innholdet være en pdf.
 
 ## Manifest
 (BrokerServiceInitiation.Manifest.PropertyList)
 
 |Manifest key|Type|Required|Beskrivelse|
 |--- |--- |--- |--- |
-|messageType|String|Yes|KjoepekontraktFraMegler|
+|messageType|String|Yes|KjoepekontraktEndringFraMegler|
 
 # Fotnoter
 <b id="f1">1</b> Aktive oppdrag [↩](#ref_f1)

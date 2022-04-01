@@ -3,8 +3,8 @@
 
   <xs:element name="kjoepekontraktforespoerselFraBank" type="KjoepekontraktforespoerselFraBank"/>
   <xs:element name="kjoepekontraktsvarFraMegler" type="KjoepekontraktSvarFraMegler"/>
-  <xs:element name="kjoepekontraktEndringFraMegler" type="KjoepekontraktFraMegler"/>
-  <xs:element name="kjoepekontraktUoppfordretFraMegler" type="KjoepekontraktFraMegler"/>
+  <xs:element name="kjoepekontraktEndringFraMegler" type="KjoepekontraktEndringFraMegler"/>
+  <xs:element name="kjoepekontraktUoppfordretFraMegler" type="KjoepekontraktUoppfordretFraMegler"/>
   <xs:element name="saldoforespoersel" type="Saldoforespoersel"/>
   <xs:element name="saldosvar" type="Saldosvar"/>
   <xs:element name="restgjeldsforespoersel" type="Restgjeldsforespoersel"/>
@@ -38,7 +38,13 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="KjoepekontraktFraMegler">
+  <xs:complexType name="KjoepekontraktEndringFraMegler">
+    <xs:sequence>
+      <xs:element name="kjoepekontrakt" type="Kjoepekontrakt" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KjoepekontraktUoppfordretFraMegler">
     <xs:sequence>
       <xs:element name="kjoepekontrakt" type="Kjoepekontrakt" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
