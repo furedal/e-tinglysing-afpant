@@ -64,7 +64,7 @@ Meldingstype: [KjoepekontraktSvarFraMegler](./kjoepekontrakt-teknisk-beskrivelse
 ## Oversendt informasjon er endret
 Det er viktig at banken har oppdatert informasjon i systemene og at denne er lik det som ligger i det signerte dokumentet. 
 Dersom bank allerede har fått KjoepekontraktSvarFraMegler og megler deretter endrer eller legger til informasjon i meglersystemene,  må banken få beskjed om dette. Det gjøres ved at 
-meglersystemet sender en [melding](./kjoepekontrakt-teknisk-beskrivelse.md#kjoepekontraktendringframegler-ved-endring) til banken. Meglers systemleverandør er ansvarlig for å sende oppdateringen til bank med KjoepekontraktFraMegler melding. 
+meglersystemet sender en [melding](./kjoepekontrakt-teknisk-beskrivelse.md#meldingstype-kjoepekontraktendringframegler-ved-endring) til banken. Meglers systemleverandør er ansvarlig for å sende oppdateringen til bank med KjoepekontraktEndringFraMegler-melding. 
 
 Vi skiller her på endringer som skjer før og etter kjøpekontrakt er signert:
 - Oppdateringer som skjer etter at kjøpekontrakt er signert haster mest og her må meglersystemet minimum polle for endringer på sin side hvert 5 minutt og sende melding til banken ved endringer. 
@@ -76,7 +76,7 @@ Når løsningen er tatt i bruk og det er opparbeidet erfaring, kan det vurderes 
 Hvilke felter som skal trigge en melding til banken om at det har skjedd en endring, er merket i tabellen under [Svar fra megler](#svar-fra-megler).
 
 
-Meldingstype: [kjoepekontraktEndringFraMegler](./kjoepekontrakt-teknisk-beskrivelse.md#kjoepekontraktendringframegler-ved-endring) 
+Meldingstype: [KjoepekontraktEndringFraMegler](./kjoepekontrakt-teknisk-beskrivelse.md#meldingstype-kjoepekontraktendringframegler-ved-endring) 
 
 # Alternative flyter
 
@@ -84,7 +84,7 @@ Meldingstype: [kjoepekontraktEndringFraMegler](./kjoepekontrakt-teknisk-beskrive
 Dersom kjøpekontrakten ikke er signert på det tidspunktet bank ber om data, skal det som finnes av strukturert informasjon sendes til banken. Resterende informasjon vil kunne ettersendes sammen med det signerte dokumentet.
 
 Det skal gå en pushvarsling fra meglersystemet til banken eller bankene som har bedt om kjøpekontrakt så snart kjøpekontrakten er 
-signert eller det er endringer i datafeltene. Dette skal sendes som en egen [meldingstype](./kjoepekontrakt-teknisk-beskrivelse.md#kjoepekontraktendringframegler-ved-endring). 
+signert eller det er endringer i datafeltene. Dette skal sendes som en egen [meldingstype](./kjoepekontrakt-teknisk-beskrivelse.md#meldingstype-kjoepekontraktendringframegler-ved-endring). 
 For at banken skal kunne koble kjøpekontrakten til sin egen sak, er det viktig at bankens referanse fra kjøpekontraktforespørselen er med.
 
 Det er viktig at meglersystemene sørger for at det signerte dokumentet alltid inneholder lik informasjon 
@@ -115,7 +115,7 @@ Endringer i signert kjøpekontrakt indikeres ved at meldingen sendes med et nytt
 Merk: Bank har selv ansvar for å holde orden på hvilke endringer som er gjort siden siste kjøpekontrakt fra megler. Det gjelder også tilsendt PDF. Den opprinnelige kontrakten vil ikke automatisk trekkes tilbake. Dette må p.t. håndteres manuelt mellom bank og megler.
 
 
-Meldingstype: [kjoepekontraktEndringFraMegler](./kjoepekontrakt-teknisk-beskrivelse.md#kjoepekontraktendringframegler-ved-endring) 
+Meldingstype: [KjoepekontraktEndringFraMegler](./kjoepekontrakt-teknisk-beskrivelse.md#meldingstype-kjoepekontraktendringframegler-ved-endring) 
 
 # Oversendelse uten forespørsel fra bank (del 2)
 I tilfeller hvor megler har informasjon om banken som har verifisert finansiering, vil det være mulig for megler å sende kjøpekontrakt 
@@ -123,7 +123,7 @@ til bank når denne er signert, uten å først ha mottatt en forespørsel fra ba
 Dette innebærer at megler kan sende kjøpekontrakt og strukturerte data ved hjelp av en pushmelding til banken.
 I slike tilfeller vil megler da ikke kunne fylle ut bankens referanse i meldingen!
 
-Meldingstype: [kjoepekontraktUoppfordretFraMegler](./kjoepekontrakt-teknisk-beskrivelse.md#kjoepekontraktuoppfordretframegler-sendes-uoppfordret) 
+Meldingstype: [KjoepekontraktUoppfordretFraMegler](./kjoepekontrakt-teknisk-beskrivelse.md#meldingstype-kjoepekontraktuoppfordretframegler-sendes-uoppfordret) 
 
 
 
