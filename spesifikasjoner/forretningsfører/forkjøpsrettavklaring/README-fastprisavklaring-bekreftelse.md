@@ -13,6 +13,8 @@ Forretningsfører bekrefter til megler at avklaring av forkjøpsrett er igangsat
 ## Meldingstype (under utarbeidelse)
 ### ForkjoepsrettAvklaringFastprisBekreftelse
 #### Feltliste 
- 
+* Oppdragsnummer
+* Registerenhet (matrikkel / orgnr andel / boligaksjeselskap)
+* Eiendommens adresse 
 
 ## Implementasjonsdetaljer

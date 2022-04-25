@@ -13,6 +13,9 @@ Forretningsfører informerer megler om forkjøpsrett er benyttet, samt informasj
 ## Meldingstype (under utarbeidelse)
 ### ForkjoepsrettStatusFastpris
 #### Feltliste 
- 
+* Oppdragsnummer
+* Registerenhet (matrikkel / orgnr andel / boligaksjeselskap)
+* Eiendommens adresse
+* Ny(e) kjøper(e) som har benyttet sin forkjøpsrett og skal tre inn i det aksepterte budet (kontaktdetaljer)
 
 ## Implementasjonsdetaljer
