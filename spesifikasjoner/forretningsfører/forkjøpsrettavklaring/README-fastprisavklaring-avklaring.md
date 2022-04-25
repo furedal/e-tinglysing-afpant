@@ -1,6 +1,7 @@
 # Informasjon om forkjøpsrett benyttet (fastprisavklaring)
 ## Introduksjon
 Forretningsfører informerer megler om forkjøpsrett er benyttet, samt informasjon om eventuell ny kjøper som har benyttet sin forkjøpsrett.
+En melding som ikke inneholder informasjon om ny kjøper skal forstås som at forkjøpsrett ikke er benyttet.
 
 ## Referat fra arbeidsgruppe 
 
