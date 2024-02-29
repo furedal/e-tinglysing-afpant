@@ -19,9 +19,8 @@ Løsningen kjøpekontrakt er delt i to deler:
 
 ## Henvendelse fra bank
 Ved henvendelse fra bank til megler, med ønske om å få oversendt kjøpekontrakt, skal banken sende følgende informasjon til meglers organisasjonsnummer;
-
-| Én av kjøpernes fødselsnummer |
-|---|
+* Kjøpernes fødselsnumre (en eller flere)
+* Banken sin referanse
 
 Meldingstype: [KjoepekontraktforespoerselFraBank](./kjoepekontrakt-teknisk-beskrivelse.md#meldingstype-kjoepekontraktforespoerselfrabank)
 
@@ -63,7 +62,7 @@ Meldingstype: [KjoepekontraktSvarFraMegler](./kjoepekontrakt-teknisk-beskrivelse
 
 ## Oversendt informasjon er endret
 Det er viktig at banken har oppdatert informasjon i systemene og at denne er lik det som ligger i det signerte dokumentet. 
-Dersom bank allerede har fått KjoepekontraktSvarFraMegler og megler deretter endrer eller legger til informasjon i meglersystemene,  må banken få beskjed om dette. Det gjøres ved at 
+Dersom bank allerede har fått KjoepekontraktSvarFraMegler og megler deretter endrer eller legger til informasjon i meglersystemene, må banken få beskjed om dette. Det gjøres ved at 
 meglersystemet sender en [melding](./kjoepekontrakt-teknisk-beskrivelse.md#kjoepekontraktendringframegler-ved-endring) til banken. Meglers systemleverandør er ansvarlig for å sende oppdateringen til bank med KjoepekontraktFraMegler melding. 
 
 Vi skiller her på endringer som skjer før og etter kjøpekontrakt er signert:
@@ -71,7 +70,6 @@ Vi skiller her på endringer som skjer før og etter kjøpekontrakt er signert:
 - For endringer og ny informasjon knyttet til kjøpekontrakten som skjer før den er signert skal tilsvarende polling intervall og oppdatering til bank settes til minimum 1 gang pr døgn, dette for å unngå flere oppdateringer til bank enn nødvendig.
 
 Når løsningen er tatt i bruk og det er opparbeidet erfaring, kan det vurderes om det er behov for å justere intervall-lengdene.
-
 
 Hvilke felter som skal trigge en melding til banken om at det har skjedd en endring, er merket i tabellen under [Svar fra megler](#svar-fra-megler).
 

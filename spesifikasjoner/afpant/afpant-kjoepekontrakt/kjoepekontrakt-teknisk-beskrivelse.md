@@ -34,6 +34,11 @@ Bank forespør kjøpekontrakt fra megler.
 Skal innehold megler(`kjoepekontraktforespoerselfrabank.megler`), bank(`kjoepekontraktforespoerselfrabank.bank`) 
 og minst en av kjøperene(`kjoepekontraktforespoerselfrabank.kjoepere`).
 
+I xml schema er kjøpere av type `Aktoer`(`Person` eller `Organisasjon`) som krever at navn er utfylt. Navn på kjøper er irrelevant for matching og blir sett bort i fra.
+
+## Validering og ruting (meglersystem)
+*Dersom bank sender mer enn en kjøper i forespørselen, skal alle matche med oppdraget i meglersystemet.* 
+
 [Se XML-eksempel:](./examples/kjoepekontraktforespoerselFraBank-example.xml)
 
 ## Payload
@@ -92,16 +97,17 @@ Ved negativt resultat lasted et tomt zip-arkiv opp. Manifest key "status" og "st
 |Manifest key|Type|Obligatorisk|Beskrivelse|
 |--- |--- |--- |--- |
 |messageType|String|Ja|KjoepekontraktsvarFraMegler|
-|status|String (enum)|Ja|Denne kan være en av følgende statuser: <ol><li>**RutetSuksessfullt**<br/>Status 'RutetSuksessfullt' er å anse som ACK (positive acknowledgement) hvor . Øvrige statuser er å anse som NACK (negative acknowledgement).</li><li>**UgyldigKjøper**<br/>Megler har ikke funnet oppgjør/oppdrag for angitt(e) kjøper(e)</li> <li>**Avvist** (sendt til et organisasjonsnummer som ikke lenger har et aktivt kundeforhold hos leverandøren - feil config i Altinn AFPANT, eller ugyldig forsendelse).</li></ol>Kun status '**RutetSuksessfullt**' er å anse som ACK (positive acknowledgement) hvor . Øvrige statuser er å anse som NACK (negative acknowledgement).|
+|status|String (enum)|Ja|Denne kan være en av følgende statuser: <ol> <li>**RutetSuksessfullt**<br/>Status 'RutetSuksessfullt' er å anse som ACK (positive acknowledgement) betyr ay det er gitt xml i svaret. Innholder minst en kjøpekontrakt.</li> <li>**KjøpekontraktIkkeKlar**<br/>Status 'KjøpekontraktIkkeKlar' er å anse som ACK (positive acknowledgement) som betyr at det finnes minst ett oppdrag som det ikke kan genereres kjøpekontrakt for. Eventuelt andre oppdrag som matcher og som kan ha kjøpekontrakt, er vedlagt i payload. Payload vil mangle dersom det eneste oppdraget som matcher ikke kan genereres kjøpekontrakt for.</li> <li>**UgyldigKjøper**<br/>Nack. Megler har ikke funnet oppgjør/oppdrag for angitt(e) kjøper(e)</li> <li>**Avvist** Nack. (sendt til et organisasjonsnummer som ikke lenger har et aktivt kundeforhold hos leverandøren - feil config i Altinn AFPANT, eller ugyldig forsendelse).</li> </ol>|
 |statusDescription|String|Nei|Inneholder en utfyllende, menneskelig-lesbar beskrivelse om hvorfor en forsendelse ble NACK-et.|
 
 ## Payload
 En ZIP-fil som inneholder en XML med requestdata ihht. [definert skjema.](../afpant-model/xsd/dsve.xsd)
 
 ### Positiv resultat (ACK)
-- En xml-fil med **kjoepekontraktsvarFraMegler** som root element og som er i henhold til [definert skjema](../afpant-model/xsd/dsve.xsd).
+- Ved `RutetSuksessfullt` En xml-fil med **kjoepekontraktsvarFraMegler** som root element og som er i henhold til [definert skjema](../afpant-model/xsd/dsve.xsd).
+- Ved `KjøpekontraktIkkeKlar` Kan innholde en xml-fil med **kjoepekontraktsvarFraMegler** som root element og som er i henhold til [definert skjema](../afpant-model/xsd/dsve.xsd).
 
-Merk at signert kjøpekontrakt skal finnes som en egen fil i ZIP-arkivet dersom metdata inneholder et vedlegg som matcher _signert_kjoepekontrakt*.(pdf|sdo)_.
+Merk at signert kjøpekontrakt skal finnes som en egen fil i ZIP-arkivet dersom metdata inneholder et vedlegg som matcher _signert_kjoepekontrakt*.(pdf)_.
 
 ### Negativt resultat (NACK)
 - Tom payload returneres (ZIP arkiv med dummy innhold). Manifest key "status" og "statusDescription" må avleses for årsak.
@@ -121,7 +127,7 @@ OG metdata skal inneholde en ressurs/vedlegg med korrekt navn.
 ### kjoepekontraktEndringFraMegler (ved endring) 
 *Bank har tidligere forespurt kjøpekontrakt eller mottatt signert kjøpekontrakt uoppfordret.* 
 
-  Sendes ved endring, dvs. at megler har tidligere sendt uoppfordret eller har mottatt en forespørsel.
+Sendes ved endring, dvs. at megler har tidligere sendt uoppfordret eller har mottatt en forespørsel.
 Felter som krever at det sendes en `KjoepekontraktFraMegler` melding til bank er markert med _hake_ i tabellen i [løsningsbeskrivelsen](kjoepekontrakt-loesningsbeskrivelse.md#svar-fra-megler).
 
 Meglers systemleverandør er ansvarlig for å sende oppdateringer til bank med KjoepekontraktFraMegler melding. Hvor ofte meglersystemene må polle for endringer og sende oppdatering til bank er definert i [løsningsbeskrivelsen](kjoepekontrakt-loesningsbeskrivelse.md#oversendt-informasjon-er-endret).
