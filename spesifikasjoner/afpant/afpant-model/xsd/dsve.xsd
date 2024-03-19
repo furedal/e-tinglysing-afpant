@@ -5,9 +5,12 @@
   <xs:element name="kjoepekontraktsvarFraMegler" type="KjoepekontraktSvarFraMegler"/>
   <xs:element name="kjoepekontraktEndringFraMegler" type="KjoepekontraktFraMegler"/>
   <xs:element name="kjoepekontraktUoppfordretFraMegler" type="KjoepekontraktFraMegler"/>
+
   <xs:element name="restgjeldsoppgaveforespoersel" type="Restgjeldsoppgaveforespoersel"/>
   <xs:element name="restgjeldsoppgavesvar" type="Restgjeldsoppgavesvar"/>
-  <xs:element name="restgjeldsforespoersel" type="Restgjeldsforespoersel"/>
+
+  <xs:element name="innfrielsessaldoforespoersel" type="Innfrielsessaldoforespoersel"/>
+
   <xs:element name="restgjeldssvar" type="Restgjeldssvar"/>
   <xs:element name="intensjonfrabank" type="IntensjonFraBank"/>
   <xs:element name="intensjonssvarframegler" type="IntensjonssvarFraMegler"/>
@@ -101,38 +104,50 @@
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="parter" type="Parter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="registerenheter" type="Registerenheter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="saldosvardetaljer" type="Saldosvardetaljer"/>
+<!-- TODO: vi må ha mer info om hvordan betalingsinformasjon skal modelleres-->
+      <xs:element minOccurs="1" maxOccurs="1" name="tredjemannspant" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="rammelaan" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSperres" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSlettes" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Restgjeldsforespoersel">
+  <xs:complexType name="Innfrielsessaldoforespoersel">
     <xs:annotation>
-      <xs:documentation>Forespørsel om restgjeld på et objekt</xs:documentation>
+      <xs:documentation>Forespørsel om innfrielsesaldo på et objekt</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="megler" type="Megler"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="parter" type="Parter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="registerenheter" type="Registerenheter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="restgjeldsforespoerseldetaljer" type="Restgjeldsforespoerseldetaljer"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="registerenhetMedDokumentreferanse" type="RegisterenhetMedDokumentreferanse"/>
+      <xs:element minOccurs="1" name="antattInnfrielsesdato" type="xs:date"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Restgjeldssvar">
+  <xs:complexType name="Innfrielsessaldosvar">
     <xs:annotation>
-      <xs:documentation>Svar på restgjeldsforespørsel</xs:documentation>
+      <xs:documentation>Svar på forespørsel om saldo</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="registerenheter" type="Registerenheter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="restgjelddetaljer" type="Restgjelddetaljer"/>
+      <!-- TODO: vi må ha mer info om hvordan betalingsinformasjon skal modelleres-->
+<!--      innfrielsesbeløp liste, type av beløp og dato-->
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="innfrielsesbeloep" type="BeloepOgDato"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="tredjemannspant" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSlettes" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BeloepOgDato">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="beloep" type="xs:double"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="dato" type="xs:date"/>
     </xs:sequence>
   </xs:complexType>
 
