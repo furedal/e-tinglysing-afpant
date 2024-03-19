@@ -5,8 +5,8 @@
   <xs:element name="kjoepekontraktsvarFraMegler" type="KjoepekontraktSvarFraMegler"/>
   <xs:element name="kjoepekontraktEndringFraMegler" type="KjoepekontraktFraMegler"/>
   <xs:element name="kjoepekontraktUoppfordretFraMegler" type="KjoepekontraktFraMegler"/>
-  <xs:element name="saldoforespoersel" type="Saldoforespoersel"/>
-  <xs:element name="saldosvar" type="Saldosvar"/>
+  <xs:element name="restgjeldsoppgaveforespoersel" type="Restgjeldsoppgaveforespoersel"/>
+  <xs:element name="restgjeldsoppgavesvar" type="Restgjeldsoppgavesvar"/>
   <xs:element name="restgjeldsforespoersel" type="Restgjeldsforespoersel"/>
   <xs:element name="restgjeldssvar" type="Restgjeldssvar"/>
   <xs:element name="intensjonfrabank" type="IntensjonFraBank"/>
@@ -81,22 +81,20 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:complexType name="Saldoforespoersel">
+  <xs:complexType name="Restgjeldsoppgaveforespoersel">
     <xs:annotation>
       <xs:documentation>Forespørsel om saldo på et objekt</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="1" maxOccurs="1" name="megler" type="Megler"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="parter" type="Parter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="registerenheter" type="Registerenheter"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="saldoforespoerseldetaljer" type="Saldoforespoerseldetaljer"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="registerenhetMedDokumentreferanse" type="RegisterenhetMedDokumentreferanse"/>
+      <xs:element minOccurs="0" name="prisantydning" type="xs:long"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Saldosvar">
+  <xs:complexType name="Restgjeldsoppgavesvar">
     <xs:annotation>
       <xs:documentation>Svar på forespørsel om saldo</xs:documentation>
     </xs:annotation>
@@ -568,6 +566,29 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="RegisterenhetMedDokumentreferanse">
+    <xs:annotation>
+      <xs:documentation>Eiendomsinformasjon med tilhørende pantedokumenter</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="matrikkel" type="Matrikkel"/>
+        <xs:element name="borettsandel" type="Borettsandel"/>
+        <xs:element name="aksjeleilighet" type="Aksjeleilighet"/>
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="pantedokumentreferanser" type="Pantedokumentreferanse">
+        <xs:annotation>
+          <xs:documentation>Liste over dagbok-/dokumentnummer (opprinnelig pant) ved tinglyste pant. Ikke obligatorisk ved aksje</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="hjemmelshavere" type="Part">
+        <xs:annotation>
+          <xs:documentation>Liste over relevante hjemmelshavere. Ekslusiv ideelle andeler, f.eks garasje</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="Matrikkel">
     <xs:sequence/>
     <xs:attribute name="kommunenavn" type="xs:string" use="required"/>
@@ -657,14 +678,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Saldoforespoerseldetaljer">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="prisantydning" type="xs:double"/>
-      <xs:element minOccurs="0" name="salgssum" type="xs:double"/>
-      <xs:element name="tinglyst" type="TinglystePant"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="Saldosvardetaljer">
     <xs:sequence>
       <xs:element name="saldoer" type="LaanListe"/>
@@ -750,16 +763,12 @@
   </xs:complexType>
 
   <xs:complexType name="Pantedokumentreferanse">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="panthaver" type="Aktoer"/>
-    </xs:sequence>
     <xs:attribute name="dokumentnummer" type="xs:string" use="required"/>
     <xs:attribute name="dokumentaar" type="xs:string" use="required"/>
     <xs:attribute name="embetenummer" type="xs:string" use="required"/>
     <xs:attribute name="rettsstiftelsesnummer" type="xs:integer" use="required"/>
-    <xs:attribute name="kommunenummer" type="xs:string" use="optional"/>
-    <xs:attribute name="tid" type="xs:dateTime" use="required"/>
-    <xs:attribute name="beloep" type="xs:double" use="required"/>
+    <xs:attribute name="registreringstidspunkt" type="xs:dateTime" use="optional"/>
+    <xs:attribute name="beloep" type="xs:double" use="optional"/>
   </xs:complexType>
 
   <xs:complexType name="Metadata">
