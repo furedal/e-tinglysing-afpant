@@ -2,7 +2,7 @@ Restgjeldsoppgave og Innfrielsessaldo
 =====================================
 
 Forespørsel om restgjeldsoppgave og innfrielsessaldo skal sendes fra bank til megler(eller bank) og bank skal svare på forespørselen ved å sende en melding tilbake til megler(eller bank) med resistanse.
-Se [kjøpekontrakt - funksjonell løsningsbeskrivelse](./kjoepekontrakt-loesningsbeskrivelse.md) for mer informasjon.
+Se [Restgjeldsoppgave og Innfrielsessaldo - funksjonell løsningsbeskrivelse](./restgjeldsoppgave-og-innfrielsessaldo-loesningsbeskrivelse.md) for mer informasjon.
 
 ## Dokumentasjon
 * [Restgjeldsoppgave og Innfrielsessaldo - funksjonell løsningsbeskrivelse](./restgjeldsoppgave-og-innfrielsessaldo-loesningsbeskrivelse.md). Endringer i den funksjonelle løsningsbeskrivelsen gjøres her.  
