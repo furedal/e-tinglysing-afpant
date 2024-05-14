@@ -10,8 +10,8 @@
   <xs:element name="restgjeldsoppgavesvar" type="Restgjeldsoppgavesvar"/>
 
   <xs:element name="innfrielsessaldoforespoersel" type="Innfrielsessaldoforespoersel"/>
+  <xs:element name="innfrielsessaldosvar" type="Innfrielsessaldosvar"/>
 
-  <xs:element name="restgjeldssvar" type="Restgjeldssvar"/>
   <xs:element name="intensjonfrabank" type="IntensjonFraBank"/>
   <xs:element name="intensjonssvarframegler" type="IntensjonssvarFraMegler"/>
   <xs:element name="intensjonsendring" type="Intensjonsendring"/>
@@ -53,7 +53,7 @@
       <xs:documentation>Kjøpekontrakt er strukturerte data fra en signert kjøpekontrakt.
         Benyttes for å digitalisere prosessene mellom banker og meglere og kan sendes fra megler til bank på
         forespørsel. Dersom kjøpekontrakten er signert skal den sendes med i elementet signertKjoepekontrakt
-        Mulige verdier til objektstype er definert i enum Objektstype. Dersom denne er spesifisert som UKJENT kan 
+        Mulige verdier til objektstype er definert i enum Objektstype. Dersom denne er spesifisert som UKJENT kan
         det valgfrie feltet objektstypeFritekst benyttes til å angi beskrivelse.
       </xs:documentation>
     </xs:annotation>
@@ -91,7 +91,7 @@
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="registerenhetMedDokumentreferanse" type="RegisterenhetMedDokumentreferanse"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="registerenheterMedHjemmelshavere" type="RegisterenheterMedHjemmelshavere"/>
       <xs:element minOccurs="0" name="prisantydning" type="xs:long"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
@@ -104,13 +104,47 @@
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-<!-- TODO: vi må ha mer info om hvordan betalingsinformasjon skal modelleres-->
-      <xs:element minOccurs="1" maxOccurs="1" name="tredjemannspant" type="xs:boolean"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="rammelaan" type="xs:boolean"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="restgjeldbetalingsinformasjonsliste" type="Restgjeldbetalingsinformasjon"/>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="registerenhetMedDokumentreferanseListe" type="RegisterenhetMedDokumentreferanse"/>
       <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSperres" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSlettes" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Restgjeldbetalingsinformasjon">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <!--      TODO hva er tredjemanspant, part eller string?-->
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="tredjemannspant" type="xs:string"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="rammelaan" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="laanenummer" type="xs:string"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="kontonummerForInnfrielse" type="xs:string"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="kidnummer" type="xs:string"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="betalingsMelding" type="xs:string"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="innfrielsesBeloepOgDato" type="BeloepOgDato"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="bevilgning" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RegisterenhetMedDokumentreferanse">
+    <xs:annotation>
+      <xs:documentation>Eiendomsinformasjon med tilhørende pantedokumenter</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="matrikkel" type="Matrikkel"/>
+        <xs:element name="borettsandel" type="Borettsandel"/>
+        <xs:element name="aksjeleilighet" type="Aksjeleilighet"/>
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="pantedokumentreferanser" type="Pantedokumentreferanse">
+        <xs:annotation>
+          <xs:documentation>Liste over dagbok-/dokumentnummer (opprinnelig pant) ved tinglyste pant. Ikke obligatorisk ved aksje</xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 
@@ -121,7 +155,7 @@
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="registerenhetMedDokumentreferanse" type="RegisterenhetMedDokumentreferanse"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="registerenheterMedHjemmelshavere" type="RegisterenheterMedHjemmelshavere"/>
       <xs:element minOccurs="1" name="antattInnfrielsesdato" type="xs:date"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
@@ -134,13 +168,30 @@
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
-      <!-- TODO: vi må ha mer info om hvordan betalingsinformasjon skal modelleres-->
-<!--      innfrielsesbeløp liste, type av beløp og dato-->
-      <xs:element minOccurs="1" maxOccurs="unbounded" name="innfrielsesbeloep" type="BeloepOgDato"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="tredjemannspant" type="xs:boolean"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="innfrielsebetalingsinformasjonliste" type="Innfrielsebetalingsinformasjon"/>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="registerenhetMedDokumentreferanseListe" type="RegisterenhetMedDokumentreferanse"/>
       <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSlettes" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Innfrielsebetalingsinformasjon">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <!--      TODO hva er tredjemanspant, part eller string?-->
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="tredjemannspant" type="xs:string"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="laanenummer" type="xs:string"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="kontonummerForInnfrielse" type="xs:string"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="kidnummer" type="xs:string"/>
+      <xs:element minOccurs="0" maxOccurs="1" name="betalingsMelding" type="xs:string"/>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="innfrielsesBeloepOgDato" type="BeloepOgDato">
+        <xs:annotation>
+          <xs:documentation>innfrielsesBeloepOgDato (Innfrielsesbeløp) (liste med beløp på antatt innfrielsesdato (+1, 2, 3 arbeidsdager))</xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 
@@ -236,11 +287,11 @@
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
   </xs:complexType>
-  
+
   <xs:complexType name="OppnaaddPrioritetDetaljer">
     <xs:annotation>
       <xs:documentation>
-        Referanser benyttet for å idenfifisere saken på mottaker(bank) sin side. 
+        Referanser benyttet for å idenfifisere saken på mottaker(bank) sin side.
         Inneholder pantedokumentets dokumentreferanse og Altinn sendersreference fra SignedMortgageDeed meldingen som ble sendt fra bank til megler.
       </xs:documentation>
     </xs:annotation>
@@ -249,7 +300,7 @@
       <xs:element minOccurs="1" maxOccurs="1" name="altinnsendersreference" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  
+
   <xs:complexType name="Avsender">
     <xs:annotation>
       <xs:documentation>Avsender angir hvem som har sendt meldingen.
@@ -463,7 +514,7 @@
       <xs:enumeration value="PROM"/>
       <xs:enumeration value="BRA"/>
       <xs:enumeration value="TOMT"/>
-      <xs:enumeration value="BTA"/> 
+      <xs:enumeration value="BTA"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -581,9 +632,9 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="RegisterenhetMedDokumentreferanse">
+  <xs:complexType name="RegisterenheterMedHjemmelshavere">
     <xs:annotation>
-      <xs:documentation>Eiendomsinformasjon med tilhørende pantedokumenter</xs:documentation>
+      <xs:documentation>Eiendomsinformasjon med tilhørende hjemmelshavere</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice>
@@ -591,14 +642,9 @@
         <xs:element name="borettsandel" type="Borettsandel"/>
         <xs:element name="aksjeleilighet" type="Aksjeleilighet"/>
       </xs:choice>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="pantedokumentreferanser" type="Pantedokumentreferanse">
-        <xs:annotation>
-          <xs:documentation>Liste over dagbok-/dokumentnummer (opprinnelig pant) ved tinglyste pant. Ikke obligatorisk ved aksje</xs:documentation>
-        </xs:annotation>
-      </xs:element>
       <xs:element minOccurs="1" maxOccurs="unbounded" name="hjemmelshavere" type="Part">
         <xs:annotation>
-          <xs:documentation>Liste over relevante hjemmelshavere. Ekslusiv ideelle andeler, f.eks garasje</xs:documentation>
+          <xs:documentation>Liste over relevante hjemmelshavere. Ekslusiv ideelle</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
