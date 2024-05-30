@@ -3,28 +3,50 @@ Restgjeldsoppgave og Innfrielsessaldo - teknisk-beskrivelse
 
 
 # Implementasjonskrav
+Det er ikke krav til å støtte både Restgjeldsoppgave og Innfrielsessaldo i førsteomgang. 
+Det er opp til den enkelte aktør å velge rekkefølge på implementert støtte. Det er forventet at man støtter begge innen rimelig tid.
+
+## Akeldo-registeret
+For å kunne sende og motta meldinger av typen Restgjeldsoppgave og Innfrielsessaldo må aktøren være registrert i Akeldo-registeret med støtte for disse meldingstypene.  
+En aktør kan være registrert for både sending og mottak av samme meldingstype. (Megler --> Bank, Bank --> Bank)
+
+### Avsender:
+**sendeliste:**  
+ - Restgjeldsoppgaveforespoersel
+ - Innfrielsessaldoforespoersel
+ 
+**mottaksliste:**
+ - Restgjeldsoppgavesvar
+ - Innfrielsessaldosvar
+
+### Mottaker:
+**sendeliste:**
+ - Restgjeldsoppgavesvar
+ - Innfrielsessaldosvar
+
+**mottaksliste:**
+ - Restgjeldsoppgaveforespoersel
+ - Innfrielsessaldoforespoerspoersel
 
 
 # Meldingstyper
-## Oversikt over meldingstyper for restgjeldsoppgave og innfrielsessaldo
 
+## Restgjeldsoppgaveforespoersel
 
-### Restgjeldsoppgaveforespoersel
-
-#### Manifest
+### Manifest
 (BrokerServiceInitiation.Manifest.PropertyList)
 
 |Manifest key|Type|Obligatorisk|Beskrivelse|
 |--- |--- |--- |--- |
 |messageType|String|Ja|Restgjeldsoppgaveforespoersel|
 
-#### Payload *(request)*
+### Payload *(request)*
 En xml-fil av modell **Restgjeldsoppgaveforespoersel** som er i henhold til [definert skjema.](../afpant-model/xsd/dsve.xsd).  
 Navnet på filen må følge konvensjonen "restgjeldsoppgaveforespoersel_*.xml". Case er ikke sensitivt.  
 
-### Restgjeldsoppgavesvar
+## Restgjeldsoppgavesvar
 
-#### Retur av ACK/NACK notification fra fagsystem tilbake til requester (Megler/Bank) etter behandling av mottatt forespørsel:
+### Retur av ACK/NACK notification fra fagsystem tilbake til requester (Megler/Bank) etter behandling av mottatt forespørsel:
 <table>
 	<thead>
 		<tr>
@@ -49,7 +71,7 @@ Navnet på filen må følge konvensjonen "restgjeldsoppgaveforespoersel_*.xml". 
 	</tbody>
 </table>
 
-#### Restgjeldsoppgavesvar objekt
+### Restgjeldsoppgavesvar objekt
 <table>
 	<tbody>
 		<tr>
@@ -76,22 +98,22 @@ Navnet på filen må følge konvensjonen "restgjeldsoppgaveforespoersel_*.xml". 
 </table>
 
 
-### Innfrielsessaldoforespoersel
+## Innfrielsessaldoforespoersel
 
-#### Manifest
+### Manifest
 (BrokerServiceInitiation.Manifest.PropertyList)
 
 |Manifest key|Type|Obligatorisk|Beskrivelse|
 |--- |--- |--- |--- |
 |messageType|String|Ja|Innfrielsessaldoforespoersel|
 
-#### Payload *(request)*
+### Payload *(request)*
 En xml-fil av modell **Innfrielsessaldoforespoersel** som er i henhold til [definert skjema.](../afpant-model/xsd/dsve.xsd).  
 Navnet på filen må følge konvensjonen "innfrielsessaldoforespoersel_*.xml". Case er ikke sensitivt.
 
-### Innfrielsessaldosvar
+## Innfrielsessaldosvar
 
-#### Retur av ACK/NACK notification fra fagsystem tilbake til requester (Megler/Bank) etter behandling av mottatt forespørsel:
+### Retur av ACK/NACK notification fra fagsystem tilbake til requester (Megler/Bank) etter behandling av mottatt forespørsel:
 <table>
 	<thead>
 		<tr>
@@ -116,7 +138,7 @@ Navnet på filen må følge konvensjonen "innfrielsessaldoforespoersel_*.xml". C
 	</tbody>
 </table>
 
-#### Innfrielsessaldosvar objekt
+### Innfrielsessaldosvar objekt
 <table>
 	<tbody>
 		<tr>
