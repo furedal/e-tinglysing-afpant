@@ -12,39 +12,39 @@ En aktør kan være registrert for både sending og mottak av samme meldingstype
 
 ### Avsender:
 **sendeliste:**  
- - Restgjeldsoppgaveforespoersel
+ - Restgjeldsforespoersel
  - Innfrielsessaldoforespoersel
  
 **mottaksliste:**
- - Restgjeldsoppgavesvar
+ - Restgjeldssvar
  - Innfrielsessaldosvar
 
 ### Mottaker:
 **sendeliste:**
- - Restgjeldsoppgavesvar
+ - Restgjeldssvar
  - Innfrielsessaldosvar
 
 **mottaksliste:**
- - Restgjeldsoppgaveforespoersel
+ - Restgjeldsforespoersel
  - Innfrielsessaldoforespoerspoersel
 
 
 # Meldingstyper
 
-## Restgjeldsoppgaveforespoersel
+## Restgjeldsforespoersel
 
 ### Manifest
 (BrokerServiceInitiation.Manifest.PropertyList)
 
 |Manifest key|Type|Obligatorisk|Beskrivelse|
 |--- |--- |--- |--- |
-|messageType|String|Ja|Restgjeldsoppgaveforespoersel|
+|messageType|String|Ja|Restgjeldsforespoersel|
 
 ### Payload *(request)*
-En xml-fil av modell **Restgjeldsoppgaveforespoersel** som er i henhold til [definert skjema.](../afpant-model/xsd/dsve.xsd).  
-Navnet på filen må følge konvensjonen "restgjeldsoppgaveforespoersel_*.xml". Case er ikke sensitivt.  
+En xml-fil av modell **Restgjeldsforespoersel** som er i henhold til [definert skjema.](../afpant-model/xsd/dsve.xsd).  
+Navnet på filen må følge konvensjonen "restgjeldsforespoersel_*.xml". Case er ikke sensitivt.  
 
-## Restgjeldsoppgavesvar
+## Restgjeldssvar
 
 ### Retur av ACK/NACK notification fra fagsystem tilbake til requester (Megler/Bank) etter behandling av mottatt forespørsel:
 <table>
@@ -63,15 +63,16 @@ Navnet på filen må følge konvensjonen "restgjeldsoppgaveforespoersel_*.xml". 
 			<td><p>messageType</p></td>
 			<td><p>String</p></td>
 			<td>
-              <a href="../afpant-model/xsd/dsve.xsd">Restgjeldsoppgavesvar</a> i henhold til definert skjema.
+              <a href="../afpant-model/xsd/dsve.xsd">Restgjeldssvar</a> i henhold til definert skjema.
             </td>
 		</tr>
 		<tr><td colspan="3"><strong>Payload (ZIP-fil)</strong></td></tr>
-		<tr><td colspan="3">En ZIP-fil som inneholder en XML fil av Restgjeldsoppgavesvar-objektet. Og en fil av typen BrokerServiceManifest med navnet manifest.xml</td></tr>
+		<tr><td colspan="3">En ZIP-fil som inneholder en XML fil av Restgjeldssvar-objektet. Og en fil av typen BrokerServiceManifest med navnet manifest.xml</td></tr>
 	</tbody>
 </table>
 
-### Restgjeldsoppgavesvar objekt
+### Restgjeldssvar objekt
+
 <table>
 	<tbody>
 		<tr>
@@ -82,12 +83,19 @@ Navnet på filen må følge konvensjonen "restgjeldsoppgaveforespoersel_*.xml". 
 		<tr>
 			<td><p>messageType</p></td>
 			<td><p>String</p></td>
-			<td><a href="../afpant-model/xsd/dsve.xsd">Restgjeldsoppgavesvar</a> i henhold til definert skjema.</td>
+			<td><a href="../afpant-model/xsd/dsve.xsd">Restgjeldssvar</a> i henhold til definert skjema.</td>
 		</tr>
 		<tr>
 			<td><p>status</p></td>
 			<td><p>String (enum)</p></td>
-			<td>Denne kan være en av følgende statuser:	<ul><li>RoutedSuccessfully</li><li>UnknownCadastre (ukjent matrikkelenhet)</li><li>DebitorMismatch (fant matrikkelenhet, men navn/id på angitt person matcher ikke hjemmelshaver)</li><li>Undefined error (En eller annen feil, forklart i Status/Statusdescription)</li></ul> Kun status 'RoutedSuccessfully' er å anse som ACK (positive acknowledgement). Øvrige statuser er å anse som NACK (negative acknowledgement).</td>
+			<td>Denne kan være en av følgende statuser:	
+                <ul>
+                    <li>RutetSuksessfullt</li>
+                    <li>LånNedbetalt</li>
+                    <li>LånSolgt</li>
+                    <li>SvarerMedEpost</li>
+                    <li>Feil</li>
+                </ul> Kun status 'RutetSuksessfullt' er å anse som ACK (positive acknowledgement). Øvrige statuser er å anse som NACK (negative acknowledgement).</td>
 		</tr>
 		<tr>
 			<td><p>statusDescription</p></td>
@@ -152,9 +160,14 @@ Navnet på filen må følge konvensjonen "innfrielsessaldoforespoersel_*.xml". C
 			<td><a href="../afpant-model/xsd/dsve.xsd">Innfrielsessaldosvar</a> i henhold til definert skjema.</td>
 		</tr>
 		<tr>
-			<td><p>status</p></td>
-			<td><p>String (enum)</p></td>
-			<td>Denne kan være en av følgende statuser:	<ul><li>RoutedSuccessfully</li><li>UnknownCadastre (ukjent matrikkelenhet)</li><li>DebitorMismatch (fant matrikkelenhet, men navn/id på angitt person matcher ikke hjemmelshaver)</li><li>Undefined error (En eller annen feil, forklart i Status/Statusdescription)</li></ul> Kun status 'RoutedSuccessfully' er å anse som ACK (positive acknowledgement). Øvrige statuser er å anse som NACK (negative acknowledgement).</td>
+			<td>Denne kan være en av følgende statuser:	
+                <ul>
+                    <li>RutetSuksessfullt</li>
+                    <li>LånNedbetalt</li>
+                    <li>LånSolgt</li>
+                    <li>SvarerMedEpost</li>
+                    <li>Feil</li>
+                </ul> Kun status 'RutetSuksessfullt' er å anse som ACK (positive acknowledgement). Øvrige statuser er å anse som NACK (negative acknowledgement).</td>
 		</tr>
 		<tr>
 			<td><p>statusDescription</p></td>
