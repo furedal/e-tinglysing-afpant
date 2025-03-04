@@ -83,6 +83,12 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="Prisantydning">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:complexType name="Restgjeldsforespoersel">
     <xs:annotation>
       <xs:documentation>Forespørsel om restgjeld på ett eller flere panteobjekt.</xs:documentation>
@@ -91,7 +97,7 @@
       <xs:element minOccurs="1" maxOccurs="1" name="avsender" type="Avsender"/>
       <xs:element minOccurs="1" maxOccurs="1" name="mottaker" type="Mottaker"/>
       <xs:element minOccurs="1" maxOccurs="1" name="registerenheterMedHjemmelshavere" type="RegisterenheterMedHjemmelshavere"/>
-      <xs:element minOccurs="0" name="prisantydning" type="xs:positiveInteger"/>
+      <xs:element minOccurs="0" name="prisantydning" type="Prisantydning"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
   </xs:complexType>
@@ -117,7 +123,6 @@
       <xs:element minOccurs="1" maxOccurs="1" name="laanliste" type="LaanRestgjeldListe"/>
       <xs:element minOccurs="1" maxOccurs="1" name="registerenheterMedDokumentreferanser" type="RegisterenheterMedDokumentreferanse"/>
       <xs:element minOccurs="1" maxOccurs="1" name="sperretForVidereOpplaan" type="xs:boolean"/>
-      <xs:element minOccurs="1" maxOccurs="1" name="bekreftelsePantrettSlettes" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="metadata" type="Metadata"/>
     </xs:sequence>
   </xs:complexType>
@@ -154,6 +159,7 @@
         Realkausjon er true hvis det er realkausjon i bildet
         laantakerIkkeHjemmelshaver er true dersom det finnes en eller flere låntakere som ikke er hjemmelshavere.
         laantakereHjemmelshaver er en liste med navn på de låntakerne som ogsp er hjemmelshavere.
+        transporterklaering er true dersom det er et lån brukt til mellomfinansiering (transporterklæring)
         Saldo er restgjeld på tidspunktet for besvarelse
       </xs:documentation>
     </xs:annotation>
@@ -163,6 +169,7 @@
       <xs:element minOccurs="1" maxOccurs="1" name="fastrente" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="realkausjon" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="laantakerIkkeHjemmelshaver" type="xs:boolean"/>
+      <xs:element minOccurs="1" maxOccurs="1" name="transporterklaering" type="xs:boolean"/>
       <xs:element minOccurs="1" maxOccurs="1" name="laanenummer" type="xs:string"/>
       <xs:element minOccurs="1" maxOccurs="1" name="kontonummer" type="Kontonummer"/>
       <xs:element minOccurs="0" maxOccurs="1" name="kidnummer" type="KID"/>
@@ -214,7 +221,7 @@
 
   <xs:complexType name="Innfrielsesdatoer">
     <xs:sequence>
-      <xs:element minOccurs="1" maxOccurs="unbounded" name="innfrielsesdato" type="xs:date"/>
+      <xs:element minOccurs="1" maxOccurs="4" name="innfrielsesdato" type="xs:date"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -267,13 +274,19 @@
 
   <xs:complexType name="BeloepOgDatoer">
     <xs:sequence>
-      <xs:element minOccurs="1" maxOccurs="unbounded" name="saldoPerDato" type="BeloepOgDato"/>
+      <xs:element minOccurs="1" maxOccurs="4" name="saldoPerDato" type="BeloepOgDato"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="LaantakereHjemmelshaver">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="navn" type="xs:string"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="navn">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="256"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 
@@ -845,6 +858,27 @@
   <xs:simpleType name="Aar">
     <xs:restriction base="xs:short">
       <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="9999"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Embetenummer">
+    <xs:restriction base="xs:short">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="999"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Rettsstiftelsesnummer">
+    <xs:restriction base="xs:short">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Pantedokumentbeloep">
+    <!-- Maks i Grunnnboken er 280.000.000.000 -->
+    <xs:restriction base="xs:long">
+      <xs:minInclusive value="0"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -854,10 +888,10 @@
     </xs:annotation>
     <xs:attribute name="dokumentnummer" type="Dokumentnummer" use="required"/>
     <xs:attribute name="dokumentaar" type="Aar" use="required"/>
-    <xs:attribute name="embetenummer" type="xs:positiveInteger" use="required"/>
-    <xs:attribute name="rettsstiftelsesnummer" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="embetenummer" type="Embetenummer" use="required"/>
+    <xs:attribute name="rettsstiftelsesnummer" type="Rettsstiftelsesnummer" use="required"/>
     <xs:attribute name="registreringstidspunkt" type="xs:dateTime" use="optional"/>
-    <xs:attribute name="beloep" type="xs:positiveInteger" use="optional">
+    <xs:attribute name="beloep" type="Pantedokumentbeloep" use="optional">
     </xs:attribute>
   </xs:complexType>
 
